@@ -1,0 +1,38 @@
+<div class="login-container">
+  <h2>Crear Cuenta</h2>
+
+  <div *ngIf="error" style="color: red; margin-bottom: 1rem;">{{ error }}</div>
+  <div *ngIf="success" style="color: green; margin-bottom: 1rem;">{{ success }}</div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label>Usuario</label>
+      <input type="text" [(ngModel)]="username" name="username" required />
+    </div>
+    <div>
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="password" name="password" required />
+    </div>
+    
+    <button 
+      type="submit" 
+      [disabled]="!username || !password"
+      [style.opacity]="!username || !password ? '0.5' : '1'"
+      [style.cursor]="!username || !password ? 'not-allowed' : 'pointer'">
+      Registrarse
+    </button>
+  </form>
+
+  <div style="text-align: center; margin-top: 1rem;">
+    <button (click)="goToLogin()" style="
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+    ">
+      ¿Ya tienes cuenta? Inicia sesión
+    </button>
+  </div>
+</div>

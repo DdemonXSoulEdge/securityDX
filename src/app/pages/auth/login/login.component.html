@@ -1,0 +1,31 @@
+<div class="login-container">
+  <h2>Iniciar Sesión</h2>
+  <form (submit)="onSubmit(); $event.preventDefault()">
+    <div>
+      <label>Usuario</label>
+      <input type="text" [(ngModel)]="username" name="username" required />
+    </div>
+    <div>
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="password" name="password" required />
+    </div>
+
+    <div *ngIf="error" style="color: red">{{ error }}</div>
+
+    <button type="submit">Entrar</button>
+  </form>
+
+  <!-- Botón que redirige usando método -->
+  <div style="text-align: center; margin-top: 1rem;">
+    <button (click)="goToRegister()" style="
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+    ">
+      ¿No tienes una cuenta? Regístrate aquí
+    </button>
+  </div>
+</div>
