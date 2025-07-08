@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router'; // 👈 Importa Router
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
@@ -15,26 +15,27 @@ export class LoginComponent {
   username = '';
   password = '';
   error = '';
+  token = ''; 
 
   constructor(
     private authService: AuthService,
-    private router: Router // 👈
+    private router: Router
   ) {}
 
   onSubmit() {
     this.authService.login(this.username, this.password).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('Login exitoso:', response);
-        // Aquí redirige a donde quieras, por ejemplo:
-        // this.router.navigate(['/dashboard']);
+        this.token = response.token;
+        this.error = '';
       },
       error: (err) => {
         this.error = 'Usuario o contraseña incorrectos';
+        this.token = '';
       }
     });
   }
 
-  // 👈 Método para navegar al registro
   goToRegister() {
     this.router.navigate(['/register']);
   }

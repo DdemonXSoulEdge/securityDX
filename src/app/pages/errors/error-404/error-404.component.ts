@@ -14,7 +14,7 @@ export class Error404Component {
   constructor(private router: Router) {}
 
   goHome() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   goBack() {

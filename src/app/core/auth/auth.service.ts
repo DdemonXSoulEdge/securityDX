@@ -1,4 +1,3 @@
-// src/app/core/auth/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,14 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:5000';
+  private apiUrl = 'http://localhost:5000/auth'; // Gateway
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { username, password });
+  register(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { username, password });
   }
-   register(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, { username, password });
+
+  login(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, { username, password });
+  }
+
+  validateToken(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/validate_token`, { token });
   }
 }

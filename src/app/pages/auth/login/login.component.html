@@ -15,7 +15,12 @@
     <button type="submit">Entrar</button>
   </form>
 
-  <!-- Botón que redirige usando método -->
+  <!-- Token mostrado al loguearse -->
+  <div *ngIf="token" style="margin-top: 1rem; background: #eee; padding: 1rem; color: black;">
+    <strong>Token recibido:</strong>
+    <p style="word-break: break-all;">{{ token }}</p>
+  </div>
+
   <div style="text-align: center; margin-top: 1rem;">
     <button (click)="goToRegister()" style="
       background: none;
