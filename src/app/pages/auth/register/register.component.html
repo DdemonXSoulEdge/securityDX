@@ -23,6 +23,12 @@
     </button>
   </form>
 
+<div *ngIf="qrCodeBase64" style="margin-top: 1rem;">
+  <p>Escanea este código QR con Google Authenticator:</p>
+  <img [src]="'data:image/png;base64,' + qrCodeBase64" alt="QR Code" />
+</div>
+
+
   <div style="text-align: center; margin-top: 1rem;">
     <button (click)="goToLogin()" style="
       background: none;

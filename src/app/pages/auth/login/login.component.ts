@@ -14,8 +14,9 @@ import { AuthService } from '../../../core/auth/auth.service';
 export class LoginComponent {
   username = '';
   password = '';
+  otp = '';
+  token = '';
   error = '';
-  token = ''; 
 
   constructor(
     private authService: AuthService,
@@ -23,14 +24,16 @@ export class LoginComponent {
   ) {}
 
   onSubmit() {
-    this.authService.login(this.username, this.password).subscribe({
+    this.authService.login(this.username, this.password, this.otp).subscribe({
       next: (response: any) => {
         console.log('Login exitoso:', response);
         this.token = response.token;
         this.error = '';
+        // Opcional: redirigir después del login
+        // this.router.navigate(['/dashboard']);
       },
-      error: (err) => {
-        this.error = 'Usuario o contraseña incorrectos';
+      error: () => {
+        this.error = 'Credenciales u OTP incorrectos';
         this.token = '';
       }
     });

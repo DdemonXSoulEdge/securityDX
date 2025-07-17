@@ -1,18 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+// Importación directa de los componentes standalone
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
   imports: [
     CommonModule,
-    FormsModule,
     RouterModule.forChild([
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
     ]),
   ],
 })

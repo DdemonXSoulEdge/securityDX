@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import time
-import requests
 import secrets
+import pyotp
+import qrcode
+import io
+import base64
+
 
 app = Flask(__name__)
 CORS(app) 
@@ -21,34 +25,54 @@ def register():
     if not data or 'username' not in data or 'password' not in data:
         return jsonify({'error': 'Missing username or password'}), 400
 
-    # Verificar si ya existe el usuario
     if any(u['username'] == data['username'] for u in users):
         return jsonify({'error': 'El usuario ya existe'}), 409
 
     user_id = len(users) + 1
+    otp_secret = pyotp.random_base32()
     new_user = {
         'id': user_id,
         'username': data['username'],
-        'password': data['password']
+        'password': data['password'],
+        'otp_secret': otp_secret
     }
 
     users.append(new_user)
-    return jsonify(new_user), 201
+
+    totp = pyotp.TOTP(otp_secret)
+    otp_uri = totp.provisioning_uri(name=data['username'], issuer_name="MiApp MFA")
+
+    qr_img = qrcode.make(otp_uri)
+    buffered = io.BytesIO()
+    qr_img.save(buffered, format="PNG")
+    qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    return jsonify({
+        "message": "Usuario registrado",
+        "user": {"id": user_id, "username": data['username']},
+        "otp_secret": otp_secret,
+        "qr_code_base64": qr_base64
+    }), 201
 
 @app.route('/login', methods=['POST'])
 def login():
-    if not request.json or 'username' not in request.json or 'password' not in request.json:
-        return jsonify({'error': 'Missing username or password'}), 400
+    data = request.json
+    if not data or 'username' not in data or 'password' not in data or 'otp' not in data:
+        return jsonify({'error': 'Missing credentials or OTP'}), 400
 
-    user = next((user for user in users if user['username'] == request.json['username']), None)
-    if not user or user['password'] != request.json['password']:
+    user = next((u for u in users if u['username'] == data['username']), None)
+    if not user or user['password'] != data['password']:
         return jsonify({'error': 'Invalid username or password'}), 401
+
+    totp = pyotp.TOTP(user['otp_secret'])
+    if not totp.verify(data['otp']):
+        return jsonify({'error': 'Invalid OTP'}), 401
 
     token = secrets.token_hex(16)
     expires = time.time() + TOKEN_EXPIRATION_SECONDS
     tokens[token] = {"user_id": user['id'], "expires": expires}
 
-    return jsonify({"message": "Logged in successfully", "token": token}), 200
+    return jsonify({"message": "Login con MFA exitoso", "token": token}), 200
 
 @app.route('/users', methods=['GET'])
 def list_users():

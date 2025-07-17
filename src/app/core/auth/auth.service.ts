@@ -14,9 +14,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, { username, password });
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { username, password });
-  }
+  login(username: string, password: string, otp: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, { username, password, otp });
+}
+
 
   validateToken(token: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/validate_token`, { token });
